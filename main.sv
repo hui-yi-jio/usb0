@@ -1,13 +1,14 @@
 module main(
-    input      CLK_IN,
-    inout      usb_dxp_io     ,
-    inout      usb_dxn_io     ,
-    input      usb_rxdp_i     ,
-    input      usb_rxdn_i     ,
-    output     usb_pullup_en_o,
-    inout      usb_term_dp_io ,
-    inout      usb_term_dn_io
-
+	input      CLK_IN,
+    	inout      usb_dxp_io     ,
+    	inout      usb_dxn_io     ,
+    	input      usb_rxdp_i     ,
+    	input      usb_rxdn_i     ,
+    	output     usb_pullup_en_o,
+    	inout      usb_term_dp_io ,
+    	inout      usb_term_dn_io ,
+	output adcclk,adccoe,
+	input [9:0]adpin
 );
 
 wire [1:0]  PHY_XCVRSELECT      ;
@@ -129,6 +130,8 @@ always@(posedge PHY_CLKOUT) begin
 		endcase
         end
 end							  
+	assign adcclk = CLK_IN;
+	assign adccoe = 0;
 uart u_uart(                                              
 	.clk       (PHY_CLKOUT)                         
 	,.txact    (usb_txact    )                    
@@ -142,6 +145,8 @@ uart u_uart(
 	,.rxval    (usb_rxval    )                    
 	,.rxrdy    (usb_rxrdy    )                    
 	,.rxdat    (usb_rxdat    )
+	,.adcclk   (CLK_IN       )
+	,.data     (adpin[9:2]   )
 );
 USB_Device_Controller_Top u_usb_device_controller_top (
      .clk_i                 (PHY_CLKOUT          )
