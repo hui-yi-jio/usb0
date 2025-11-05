@@ -9,20 +9,20 @@ module uart(
 	output reg rxrdy,
 	input reg [7:0]rxdat
 );
-	always@ (negedge clk)begin
+reg [5:0]i = 'b0;
+reg [7:0][0:63]tmp;
+	always@ (posedge clk)begin
 		rxrdy <= 1;
-	//	if(rxact)begin
-			txcork <= 0;
-			txdat <= 8'h96;
-			txdat_len <= 1;
-	//	end
-	//	else txdat_len <= 0;
-		//if(rxact)begin
-		//	rxrdy <= 1;
-		//	txdat <= rxdat;
-		//	txcork <= 0;
-		//	txdat_len <= 1;
-		//end
+		if(rxact && rxval)begin
+		//	i <= i + 1;
+			tmp[i] <= rxdat;
+		end
 		//else rxrdy <= 0;
+		//if(txact)begin
+			txcork <= 0;
+	      		txdat <= tmp[i];
+	      		txdat_len <= 1;
+		//end
+		//else txcork <= 1;
 	end
 endmodule
