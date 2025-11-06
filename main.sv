@@ -8,7 +8,8 @@ module main(
     	inout      usb_term_dp_io ,
     	inout      usb_term_dn_io ,
 	output adcclk,adccoe,
-	input [9:0]adpin
+	input [9:0]adpin,
+	output pwm1,pwm2
 );
 
 wire [1:0]  PHY_XCVRSELECT      ;
@@ -145,6 +146,8 @@ uart u_uart(
 	,.rxval    (usb_rxval    )                    
 	,.rxrdy    (usb_rxrdy    )                    
 	,.rxdat    (usb_rxdat    )
+	,.pwm1     (pwm1         )
+	,.pwm2     (pwm2         )
 );
 USB_Device_Controller_Top u_usb_device_controller_top (
      .clk_i                 (PHY_CLKOUT          )

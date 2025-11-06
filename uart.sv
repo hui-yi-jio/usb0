@@ -7,28 +7,36 @@ module uart(
 	output reg [11:0]txdat_len,
 	input rxact,rxval,
 	output rxrdy,
-	input reg [7:0]rxdat
+	input reg [7:0]rxdat,
+	output pwm1,pwm2
 );
-wire [5:0]compare;
-reg [5:0]ri = 'b0;
-reg [5:0]ti = 'b0;
-reg [7:0][0:63]tmp;
-assign compare = ri-ti;
-assign txcork = 0;//compare ? 0 : 1;
+reg [7:0]tmp;
+reg [5:0]div;
+reg [31:0]period_count,duty_count;
+wire [6:0]fre,duty;
+reg [31:0]fre_cnt,fre_count;
+assign txcork = 0;
 assign txval = 0;
 assign rxrdy = 1;
+assign fre = tmp[7]?tmp[6:0]:fre;
+assign duty = tmp[7]?duty:tmp[6:0];
+assign fre_count = 1000/fre;
+assign duty_count = (fre_count*duty)/100;
+assign pwm1 = fre_cnt<duty_count?1:0;
+assign pwm2 = pwm1;
 	always @(posedge txact)begin
-		case(endpt)
-			2:begin
-				txdat <= ri;//tmp[ti];
-				txdat_len <= 1;
-				ti <= ti + 1;
-			end
-			default:;
-		endcase
+		txdat <= tmp;
+		txdat_len <= 1;
 	end
 	always @(posedge rxval)begin
-			ri <= ri + 1;
-			tmp[ri] <= rxdat;
+		tmp <= rxdat;
+	end
+	always @(posedge clk)begin
+		div = div + 1;
+		if(div == 50)begin
+			if(fre_cnt >= fre_count - 1)
+				fre_cnt <= 0;
+			else fre_cnt <= fre_cnt + 1;
+		end
 	end
 endmodule
