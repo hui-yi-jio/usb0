@@ -145,8 +145,6 @@ uart u_uart(
 	,.rxval    (usb_rxval    )                    
 	,.rxrdy    (usb_rxrdy    )                    
 	,.rxdat    (usb_rxdat    )
-	,.adcclk   (CLK_IN       )
-	,.data     (adpin[9:2]   )
 );
 USB_Device_Controller_Top u_usb_device_controller_top (
      .clk_i                 (PHY_CLKOUT          )
