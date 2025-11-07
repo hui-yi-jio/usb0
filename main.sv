@@ -7,8 +7,6 @@ module main(
     	output     usb_pullup_en_o,
     	inout      usb_term_dp_io ,
     	inout      usb_term_dn_io ,
-	output adcclk,adccoe,
-	input [9:0]adpin,
 	output pwm1,pwm2
 );
 
@@ -134,7 +132,7 @@ end
 	assign adcclk = CLK_IN;
 	assign adccoe = 0;
 uart u_uart(                                              
-	.clk       (PHY_CLKOUT)                         
+	.clk       (CLK_IN)                         
 	,.txact    (usb_txact    )                    
 	,.txpop    (usb_txpop    )                    
 	,.endpt    (usb_endpt    )                    
